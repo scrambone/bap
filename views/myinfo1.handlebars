@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title> My Info</title>
+    </head>
+    <body>
+    <h1>Hello </h1>
+        {{#if errors}}
+    {{#each errors}}
+    <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
+{{/if}}
+
+    </body>
+</html>

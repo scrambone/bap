@@ -1,0 +1,10 @@
+<h2 class="pahe-header">Filling Information</h2>
+<p>Fill Information about you</p>
+
+{{#if errors}}
+    {{#each errors}}
+    <div class="alert alert-danger">{{msg}}</div>
+    {{/each}}
+{{/if}}
+
+<p> Name = {{User.name}} </p>
