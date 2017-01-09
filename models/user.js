@@ -56,3 +56,5 @@ bcrypt.compare(candidatePassword, hash, function(err, isMatch) {
     callback(null, isMatch);
 });
 }
+
+

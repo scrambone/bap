@@ -5,9 +5,18 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
+var Auction = require('../models/auction');
+var Counter = require('../models/counter');
+
+
 //Register
 router.get('/register', function(req, res) {
 	res.render('register');
+});
+
+//Create Lot
+router.get('/createlot', function(req, res) {
+    res.render('createlot');
 });
 
 //Login
@@ -16,11 +25,11 @@ router.get('/login', function(req, res) {
 });
 
 //MyInfo
-router.get('/myinfo', function (req, res) {
+/*router.get('/myinfo', function (req, res) {
     res.render('myinfo');
     //req.flash('success_msg',' befoUser');
   
-     User.getUserByUsername("test", function(err, user){
+     User.getUserByUsername("scrambone", function(err, user){
      if(err) throw err;
      if(!user){
          return done(null, false, {message: 'Unknow User'});
@@ -29,10 +38,10 @@ router.get('/myinfo', function (req, res) {
      req.flash('success_msg',' got User with name: '+user.name);
  });
    
-});
+});*/
 
 
-router.get('/myinfo/:id', function(req, res){
+/*router.get('/myinfo/:id', function(req, res){
 User.getUserByUsername(req.params.id, function(err, user){
      if(err) throw err;
      if(!user){
@@ -44,7 +53,7 @@ User.getUserByUsername(req.params.id, function(err, user){
  });
 
  // res.send('user name= ' +user.name);
-});
+});*/
 
 
 
@@ -85,6 +94,70 @@ router.post('/register', function(req, res) {
         res.redirect('/users/login');
     }
 });
+
+
+
+
+
+
+//Create Lot
+router.post('/createlot', function(req, res) {
+    //console.log(req.body);
+   // var auctionid=0;
+    var name = req.body.name;
+    var age = req.body.age;
+    var description = req.body.description;
+    var picture = req.body.picture;
+    var starts = req.body.starts;
+    var category = req.body.category;
+    var duration = req.body.duration;
+    var auctionid=Counter.getNextSequence("auctionid");
+    //Validation
+    req.checkBody('name', 'Name is required').notEmpty();
+    req.checkBody('age', 'Age is required').notEmpty();
+    req.checkBody('age', 'Age must be 18+').len(2);
+    req.checkBody('description', 'Description is required').notEmpty();
+    req.checkBody('picture', 'Picture is required').notEmpty();
+    req.checkBody('starts', 'Date of start is required').notEmpty();
+    req.checkBody('category', 'Category is required').notEmpty();
+    req.checkBody('duration', 'Duration is required').notEmpty();
+    
+   
+    
+    var errors = req.validationErrors();
+    
+    if (errors){
+        res.render('createlot',{
+            errors:errors
+        });
+    } else {
+     
+       
+       // console.log("here2 = "+Counter.getNextSequence("auctionid"));
+       //auctionid=Counter.getNextSequence("auctionid");
+       // console.log("here3 = "+auctionid);
+        var newAuction = new Auction({
+            
+            auctionid: auctionid,
+            //auctionid: Counter.getNextSequence("auctionid"),
+            name: name,
+            age: age,
+            description: description,
+            picture: picture,
+            starts: starts,
+            category: category,
+            duration: duration
+            
+        });
+        Auction.createAuction(newAuction, function(err, auction){
+            if(err) throw err;
+            console.log(auction);
+        });
+        req.flash('success_msg','Your Auction was successfully created!');
+        res.redirect('/');
+    }
+});
+
 
 
 
