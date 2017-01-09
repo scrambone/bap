@@ -3,6 +3,7 @@
 Необхідно:
 Node
 MongoDB
+Mongoose
 ExpressJS
 PassportJS
 <p>
